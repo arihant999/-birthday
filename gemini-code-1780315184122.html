@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Laado 🌸</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #26111d 0%, #0a0408 100%);
+            --card-bg: rgba(0, 0, 0, 0.4);
+            --card-border: rgba(255, 183, 197, 0.25);
+            --text-main: #fdf5f8;
+            --accent-pink: #ff9eb3;
+            --accent-glow: rgba(255, 158, 179, 0.6);
+        }
+
+        .night-mode {
+            --bg-gradient: linear-gradient(135deg, #07091a 0%, #010103 100%);
+            --card-bg: rgba(0, 0, 0, 0.6);
+            --card-border: rgba(255, 215, 0, 0.2);
+            --accent-pink: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-main);
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: background 2s ease-in-out;
+        }
+
+        /* Canvas Layers */
+        #sakura-canvas, #fireworks-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        #fireworks-canvas {
+            display: none;
+            z-index: 2;
+        }
+
+        /* Sparkle Cursor */
+        #cursor-sparkles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent-pink), 0 0 20px var(--accent-pink);
+            animation: sparkleAnim 1.2s forwards cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) translateY(30px); opacity: 0; }
+        }
+
+        /* Main App Container */
+        .app-container {
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 550px;
+            height: 88vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px); /* Blur kam rakha hai taaki text clear ho */
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 35px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: border-color 2s ease;
+        }
+
+        /* Page Layouts */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95) translateY(25px);
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1) translateY(0);
+            z-index: 20;
+        }
+
+        /* Typography */
+        .heading-cursive {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.2rem;
+            color: var(--accent-pink);
+            text-shadow: 0 0 20px var(--accent-glow);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .heading-sub {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #fff;
+            opacity: 0.95;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* Images & GIFs */
+        .hero-gif {
+            width: 180px;
+            border-radius: 24px;
+            margin: 25px 0;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255,255,255,0.03);
+            padding: 10px;
+        }
+
+        .sticker {
+            width: 140px;
+            border-radius: 16px;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+            animation: floatSticker 4s ease-in-out infinite;
+        }
+
+        @keyframes floatSticker {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Buttons */
+        .btn-luxury {
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(255, 117, 140, 0.4), inset 0 2px 5px rgba(255,255,255,0.5);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-luxury:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 20px 45px rgba(255, 117, 140, 0.6), inset 0 2px 5px rgba(255,255,255,0.6);
+        }
+
+        /* Scrollable Message Area (Page 4) */
+        .content-scroll {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 2rem;
+            text-align: left;
+            scroll-behavior: smooth;
+        }
+
+        .content-scroll::-webkit-scrollbar { width: 5px; }
+        .content-scroll::-webkit-scrollbar-thumb { background: rgba(255, 158, 179, 0.6); border-radius: 10px; }
+
+        .memory-block {
+            background: rgba(0, 0, 0, 0.7); 
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 24px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .text-body {
+            font-size: 1.15rem;
+            line-height: 2.1;
+            color: #ffffff; 
+            font-weight: 500;
+            white-space: pre-wrap;
+            text-align: justify;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Loading Screen */
+        #loading-screen {
+            background: var(--bg-gradient);
+            z-index: 100;
+            cursor: pointer; 
+        }
+        
+        .loader-heart {
+            width: 50px;
+            height: 50px;
+            background: #ff9eb3;
+            position: relative;
+            transform: rotate(-45deg);
+            animation: heartbeat 1.5s infinite;
+            box-shadow: 0 0 40px #ff9eb3;
+        }
+        .loader-heart::before, .loader-heart::after {
+            content: "";
+            width: 50px;
+            height: 50px;
+            background: #ff9eb3;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .loader-heart::before { top: -25px; left: 0; }
+        .loader-heart::after { top: 0; left: 25px; }
+
+        @keyframes heartbeat {
+            0% { transform: rotate(-45deg) scale(0.8); }
+            10% { transform: rotate(-45deg) scale(1); }
+            20% { transform: rotate(-45deg) scale(0.8); }
+            30% { transform: rotate(-45deg) scale(1.1); }
+            50% { transform: rotate(-45deg) scale(0.8); }
+            100% { transform: rotate(-45deg) scale(0.8); }
+        }
+
+        @media (max-width: 480px) {
+            .app-container { height: 92vh; width: 94%; border-radius: 30px; }
+            .heading-cursive { font-size: 3.6rem; }
+            .heading-sub { font-size: 1rem; }
+            .btn-luxury { padding: 15px 35px; font-size: 1rem; }
+            .hero-gif { width: 160px; }
+            .text-body { font-size: 1.05rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="sakura-canvas"></canvas>
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="cursor-sparkles"></div>
+
+    <div class="app-container" id="main-app">
+        
+        <!-- LOADING SCREEN (Clickable fallback) -->
+        <div id="loading-screen" class="page active" onclick="goToPage(1)">
+            <div class="loader-heart"></div>
+            <h2 class="heading-sub" style="margin-top: 60px; letter-spacing: 8px;">Unwrapping...</h2>
+            <p style="font-size: 0.8rem; color: #fff; opacity: 0.5; margin-top: 10px;">(Tap anywhere to open)</p>
+        </div>
+
+        <!-- PAGE 1: Welcome -->
+        <div id="page-1" class="page">
+            <h1 class="heading-cursive" style="font-size: 4.8rem;">For Laado 🌸</h1>
+            
+            <!-- EXPLICIT LOCAL FILE -->
+            <img src="1000395137.gif" alt="Sleeping Bunny" class="hero-gif">
+            
+            <p class="text-body" style="text-align: center; margin-bottom: 10px; font-size: 1.2rem;">A premium experience crafted just for you...</p>
+            <button class="btn-luxury" onclick="goToPage(2)">Tap Here Laado 🌸</button>
+        </div>
+
+        <!-- PAGE 2: Surprise Reveal -->
+        <div id="page-2" class="page">
+            <h2 class="heading-sub">Birthday Surprise 🎁</h2>
+            
+            <!-- Gift Surprise Placeholder -->
+            <img src="1000395140.jpg" alt="Gift Surprise" class="hero-gif" style="width: 200px; border-radius: 20px;">
+            
+            <h1 class="heading-cursive" style="font-size: 3rem; margin-top: 10px;">Are you ready?</h1>
+            <button class="btn-luxury" onclick="goToPage(3)">Open Your Surprise 🎁</button>
+        </div>
+
+        <!-- PAGE 3: Short Note -->
+        <div id="page-3" class="page">
+            <h1 class="heading-cursive" style="font-size: 2.8rem; line-height: 1.3;">ek Acah payra sa short note meri trhf se 🤏🏻</h1>
+            
+            <!-- EXPLICIT LOCAL FILE -->
+            <img src="1000395138.gif" alt="Waving Cute Sticker" class="sticker" style="margin: 15px 0;">
+            
+            <p class="text-body" style="text-align: center;">
+                Tu hamesha aise hi muskurati reh. Humari dosti bilkul in Dudu-Bubu jaisi hai, thodi pagal aur bohot pyari. Is saal tujhe duniya ki har khushi mile! ✨
+            </p>
+
+            <button class="btn-luxury" onclick="goToPage(4)">One More Thing 💖</button>
+        </div>
+
+        <!-- PAGE 4: Long Dedicated Message -->
+        <div id="page-4" class="page" style="justify-content: flex-start; padding: 0;">
+            <div style="background: rgba(0,0,0,0.8); width: 100%; padding: 1.5rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); z-index: 10;">
+                <h2 class="heading-cursive" style="font-size: 2.4rem; margin:0;">Just For You...</h2>
+            </div>
+            
+            <div class="content-scroll">
+                <div class="text-body">
+Yahan se apna wo lamba 2000+ words ka message likhna shuru karna. Maine background ka blur effect kaafi kam kar diya hai aur text ka color ekdum bright kar diya hai, ab padhne me koi dikkat nahi aayegi.
+
+<div class="memory-block">
+    <h3 style="font-family: 'Dancing Script'; font-size: 2.5rem; color: #ff9eb3; margin-bottom: 15px;">A Special Memory</h3>
+    
+    <!-- EXPLICIT LOCAL FILE -->
+    <img src="1000395136.gif" alt="Bunny Chick Hug" class="hero-gif" style="margin: 0;">
+    
+    <p style="font-size: 1.05rem; color: #ddd; margin-top: 15px;">You can write your special memories right below this cute hug!</p>
+</div>
+
+Hum dono ki memories is scrapbook jaisi jagah me humesha safe rahengi. Mujhe pata hai tu thodi si dramatic hai, par sach batau toh tu best hai! 🌸
+
+<div style="text-align: center; margin: 30px 0;">
+    <!-- EXPLICIT LOCAL FILE -->
+    <img src="1000395139.gif" alt="Sleeping Sticker" class="sticker" style="width: 140px;">
+</div>
+
+Bhagwan kare is naye saal me tu aur bhi zyada aage badhe. 
+(Apna baaki ka lamba message yahan aaram se paste kar dena...)
+<br><br>
+<span style="font-family: 'Dancing Script'; font-size: 2.8rem; color: var(--accent-pink); display: block; text-align: right; margin-top: 20px;">- Tera Bestie ✨</span>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px; margin-bottom: 30px;">
+                    <button class="btn-luxury" onclick="triggerFinale()">Let's Celebrate 🥂</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: Finale (Night Scene) -->
+        <div id="page-5" class="page">
+            <h2 class="heading-sub" style="color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.5);">Happy Birthday</h2>
+            <h1 class="heading-cursive" style="font-size: 5.5rem; color: #fff; text-shadow: 0 0 40px #fff;">Laado</h1>
+            
+            <p class="text-body" style="text-align: center; font-size: 1.3rem; margin-top: 20px; font-weight: 600; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">
+                May your night shine as bright as these fireworks! 🎆💖
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // FOOLPROOF LOADING - Ye directly chal jayega script run hote hi
+        setTimeout(function() {
+            goToPage(1);
+        }, 2000);
+
+        function goToPage(pageNum) {
+            if(pageNum !== 0) {
+                document.getElementById('loading-screen').style.display = 'none';
+            }
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageNum).classList.add('active');
+        }
+
+        function triggerFinale() {
+            goToPage(5);
+            document.body.classList.add('night-mode');
+            document.getElementById('sakura-canvas').style.display = 'none';
+            document.getElementById('fireworks-canvas').style.display = 'block';
+            startNightScene();
+        }
+
+        const cursorContainer = document.getElementById('cursor-sparkles');
+        document.addEventListener('mousemove', (e) => {
+            if(Math.random() > 0.6) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                if (document.body.classList.contains('night-mode')) {
+                    sparkle.style.boxShadow = '0 0 12px #ffd700, 0 0 20px #ffd700';
+                }
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                cursorContainer.appendChild(sparkle);
+                setTimeout(() => { sparkle.remove(); }, 1200);
+            }
+        });
+
+        const sCanvas = document.getElementById('sakura-canvas');
+        const sCtx = sCanvas.getContext('2d');
+        let petals = [];
+
+        function resizeCanvases() {
+            sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
+            const fCanvas = document.getElementById('fireworks-canvas');
+            fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvases);
+        resizeCanvases();
+
+        class Sakura {
+            constructor() { this.reset(); this.y = Math.random() * sCanvas.height; }
+            reset() {
+                this.x = Math.random() * sCanvas.width;
+                this.y = -30;
+                this.w = Math.random() * 6 + 7;  
+                this.h = Math.random() * 10 + 12; 
+                this.speedY = Math.random() * 1.5 + 1.2; 
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 0.03 - 0.015;
+                this.opacity = Math.random() * 0.5 + 0.4; 
+                this.swayFreq = Math.random() * 0.015 + 0.005;
+                this.swayAmp = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.y * this.swayFreq) * this.swayAmp;
+                this.rotation += this.rotationSpeed;
+                if (this.y > sCanvas.height + 30 || this.x < -30 || this.x > sCanvas.width + 30) this.reset();
+            }
+            draw() {
+                sCtx.save();
+                sCtx.translate(this.x, this.y);
+                sCtx.rotate(this.rotation);
+                sCtx.beginPath();
+                sCtx.moveTo(0, 0);
+                sCtx.bezierCurveTo(-this.w / 2, this.h / 3, -this.w / 2, this.h, 0, this.h);
+                sCtx.bezierCurveTo(this.w / 2, this.h / 2, this.w / 2, this.h / 3, 0, 0);
+                sCtx.fillStyle = `rgba(255, 183, 197, ${this.opacity})`;
+                sCtx.fill();
+                sCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < (window.innerWidth < 768 ? 45 : 85); i++) petals.push(new Sakura());
+        
+        function animateSakura() {
+            if(!document.body.classList.contains('night-mode')){
+                sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+                petals.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animateSakura);
+            }
+        }
+        animateSakura();
+
+        const fCanvas = document.getElementById('fireworks-canvas');
+        const fCtx = fCanvas.getContext('2d');
+        let fireflies = [];
+        let particles = [];
+
+        class Firefly {
+            constructor() {
+                this.x = Math.random() * fCanvas.width;
+                this.y = Math.random() * fCanvas.height;
+                this.size = Math.random() * 2.5 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.brightness = Math.random();
+                this.fade = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                this.brightness += this.fade;
+                if(this.brightness > 1 || this.brightness < 0) this.fade *= -1;
+                if(this.x < 0 || this.x > fCanvas.width) this.speedX *= -1;
+                if(this.y < 0 || this.y > fCanvas.height) this.speedY *= -1;
+            }
+            draw() {
+                fCtx.beginPath();
+                fCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                fCtx.fillStyle = `rgba(255, 255, 200, ${this.brightness})`;
+                fCtx.shadowBlur = 15;
+                fCtx.shadowColor = "#ffeb99";
+                fCtx.fill();
+                fCtx.shadowBlur = 0;
+            }
+        }
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.life = 1.0;
+                this.decay = Math.random() * 0.02 + 0.015;
+            }
+            update() {
+                this.vx *= 0.96; this.vy *= 0.96;
+                this.vy += 0.04; 
+                this.x += this.vx; this.y += this.vy;
+                this.life -= this.decay;
+            }
+            draw() {
+                fCtx.globalAlpha = Math.max(0, this.life);
+                fCtx.fillStyle = this.color;
+                fCtx.beginPath();
+                fCtx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                fCtx.fill();
+                fCtx.globalAlpha = 1;
+            }
+        }
+
+        const colors = ['#ff6b8b', '#ffd700', '#66fcf1', '#ffffff', '#ff9eb3', '#ffa500'];
+
+        function explode(x, y) {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for(let i=0; i<70; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function startNightScene() {
+            for(let i=0; i<60; i++) fireflies.push(new Firefly());
+            
+            setInterval(() => {
+                explode(Math.random() * fCanvas.width, Math.random() * (fCanvas.height * 0.7));
+            }, 1000);
+
+            function animateNight() {
+                fCtx.fillStyle = 'rgba(1, 1, 3, 0.25)';
+                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+                
+                fireflies.forEach(f => { f.update(); f.draw(); });
+                
+                for(let i = particles.length - 1; i >= 0; i--) {
+                    particles[i].update();
+                    particles[i].draw();
+                    if(particles[i].life <= 0) particles.splice(i, 1);
+                }
+                
+                requestAnimationFrame(animateNight);
+            }
+            animateNight();
+        }
+    </script>
+</body>
+</html>
