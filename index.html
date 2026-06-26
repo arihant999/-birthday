@@ -200,6 +200,27 @@
             box-shadow: 0 20px 45px rgba(255, 117, 140, 0.6), inset 0 2px 5px rgba(255,255,255,0.6);
         }
 
+        .btn-luxury::after{
+    content:"";
+    position:absolute;
+    top:-50%;
+    left:-120%;
+    width:55%;
+    height:220%;
+    background:rgba(255,255,255,.35);
+    transform:rotate(25deg);
+    transition:left .8s ease;
+}
+
+.btn-luxury:hover::after,
+.btn-luxury:active::after{
+    left:170%;
+}
+
+.btn-luxury:active{
+    transform:scale(.96);
+}
+
         /* Scrollable Message Area (Page 4) */
         .content-scroll {
             width: 100%;
@@ -401,6 +422,9 @@ Pata hai aapko phele kabhi bhi kis ke liye mene ase birthday wish bhi nahi likha
             
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + pageNum).classList.add('active');
+            if (navigator.vibrate) {
+    navigator.vibrate([120, 60, 120]);
+            }
         }
 
         function triggerFinale() {
