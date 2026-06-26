@@ -339,7 +339,7 @@
 
         <!-- PAGE 3: Short Note -->
         <div id="page-3" class="page">
-            <h1 class="heading-cursive" style="font-size: 2.8rem; line-height: 1.3;">ek chotu payra sa short note meri trhf se 🤏🏻</h1>
+            <h1 class="heading-cursive" style="font-size: 2.8rem; line-height: 1.3;">Ek Chotu Sa Pyara Note Meri Taraf Se 🤏🏻</h1>
             
             <!-- EXPLICIT LOCAL FILE -->
             <img src="1000395138.gif" alt="Waving Cute Sticker" class="sticker" style="margin: 15px 0;">
@@ -403,7 +403,7 @@ Pata hai aapko phele kabhi bhi kis ke liye mene ase birthday wish bhi nahi likha
             
             <p class="text-body" style="text-align: center; font-size: 1.3rem; margin-top: 20px; font-weight: 600; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">
                 Your life always sparkle brighter than these fireworks! 🥹🎆✨🎊🎇🎉🎆💖💫
-(aur Gift tho aapko mil hi gaya haii...😌🤌🏻 enjoy your day..🥳💥🎉🎊✨💫😸🦎)
+(Aur haan... Gift toh aapko mil hi gaya haii..😌✨ Ab bas apna special day enjoy kariyee...🥳💖🥳💥🎉🎊✨💫😸🦎)
             </p>
         </div>
 
@@ -432,7 +432,15 @@ Pata hai aapko phele kabhi bhi kis ke liye mene ase birthday wish bhi nahi likha
             document.body.classList.add('night-mode');
             document.getElementById('sakura-canvas').style.display = 'none';
             document.getElementById('fireworks-canvas').style.display = 'block';
-            startNightScene();
+            startNightScene(); 
+            if (navigator.vibrate) {
+        navigator.vibrate([
+            300,100,
+            300,100,
+            500,150,
+            700
+           ]);
+         }
         }
 
         const cursorContainer = document.getElementById('cursor-sparkles');
