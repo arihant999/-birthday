@@ -289,6 +289,7 @@
             50% { transform: rotate(-45deg) scale(0.8); }
             100% { transform: rotate(-45deg) scale(0.8); }
         }
+               
 #lock-screen{
     position:fixed;
     inset:0;
@@ -342,6 +343,61 @@
     color:#ffb3b3;
     font-size:.95rem;
 }
+       #lock-effects{
+position:fixed;
+inset:0;
+overflow:hidden;
+pointer-events:none;
+z-index:1;
+}
+
+#moon{
+position:absolute;
+top:70px;
+right:50px;
+width:80px;
+height:80px;
+border-radius:50%;
+background:#fff7d1;
+box-shadow:0 0 40px #fff5aa;
+animation:moonFloat 6s ease-in-out infinite;
+}
+
+@keyframes moonFloat{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-12px);}
+}
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+box-shadow:0 0 8px white;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:.2;}
+to{opacity:1;}
+}
+
+.bubble{
+position:absolute;
+bottom:-60px;
+border-radius:50%;
+background:rgba(255,255,255,.18);
+backdrop-filter:blur(2px);
+animation:bubbleUp linear forwards;
+}
+
+@keyframes bubbleUp{
+to{
+transform:translateY(-120vh);
+opacity:0;
+}
+}
         
         @media (max-width: 480px) {
             .app-container { height: 92vh; width: 94%; border-radius: 30px; }
@@ -358,7 +414,11 @@
     <canvas id="sakura-canvas"></canvas>
     <canvas id="fireworks-canvas"></canvas>
     <div id="cursor-sparkles"></div>
-
+<div id="lock-effects">
+    <div id="moon"></div>
+    <div id="stars"></div>
+    <div id="bubbles"></div>
+</div>
     <div id="lock-screen">
     <h2>🔒</h2>
     <h1>Enter Your Special Date</h1>
@@ -762,6 +822,33 @@ setTimeout(() => {
             }
             animateNight();
         }
+        // ⭐ Stars
+for(let i=0;i<80;i++){
+let s=document.createElement("div");
+s.className="star";
+s.style.left=Math.random()*100+"vw";
+s.style.top=Math.random()*100+"vh";
+s.style.animationDelay=Math.random()*2+"s";
+document.getElementById("stars").appendChild(s);
+}
+
+// 🫧 Bubbles
+setInterval(()=>{
+let b=document.createElement("div");
+b.className="bubble";
+
+let size=10+Math.random()*30;
+
+b.style.width=size+"px";
+b.style.height=size+"px";
+b.style.left=Math.random()*100+"vw";
+b.style.animationDuration=6+Math.random()*5+"s";
+
+document.getElementById("bubbles").appendChild(b);
+
+setTimeout(()=>b.remove(),11000);
+
+},600);
     </script>
 </body>
 </html>
