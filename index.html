@@ -353,28 +353,30 @@ z-index:99998;
 
 #moon{
     position:absolute;
-    top:40px;
-    right:40px;
-    width:80px;
-    height:80px;
+    top:18px;
+    right:18px;
+
+    width:82px;
+    height:82px;
     border-radius:50%;
 
     background:
-    radial-gradient(circle at 28% 28%, rgba(170,170,170,.18) 5px, transparent 6px),
-    radial-gradient(circle at 68% 38%, rgba(160,160,160,.14) 7px, transparent 8px),
-    radial-gradient(circle at 48% 68%, rgba(180,180,180,.12) 6px, transparent 7px),
-    radial-gradient(circle at 75% 72%, rgba(150,150,150,.10) 4px, transparent 5px),
+    radial-gradient(circle at 28% 28%, rgba(170,170,170,.16) 5px, transparent 6px),
+    radial-gradient(circle at 68% 38%, rgba(160,160,160,.12) 7px, transparent 8px),
+    radial-gradient(circle at 48% 68%, rgba(180,180,180,.10) 6px, transparent 7px),
+    radial-gradient(circle at 75% 72%, rgba(150,150,150,.08) 4px, transparent 5px),
     radial-gradient(circle,
         #ffffff 0%,
-        #f6f6f8 55%,
-        #ececf0 80%,
-        #dadbe2 100%);
+        #fafafa 50%,
+        #efeff2 82%,
+        #d9dae0 100%);
 
+    /* Glow kam kiya hai */
     box-shadow:
-        0 0 18px rgba(255,255,255,.45),
-        0 0 40px rgba(255,255,255,.18),
-        0 0 70px rgba(255,255,255,.08);
+        0 0 10px rgba(255,255,255,.30),
+        0 0 22px rgba(255,255,255,.12);
 
+    opacity:.92;
     animation:moonFloat 6s ease-in-out infinite;
 }
 
