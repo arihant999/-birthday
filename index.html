@@ -289,7 +289,60 @@
             50% { transform: rotate(-45deg) scale(0.8); }
             100% { transform: rotate(-45deg) scale(0.8); }
         }
+#lock-screen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#26111d,#0a0408);
+    color:white;
+}
 
+#lock-screen h1{
+    margin:15px 0;
+    font-size:2rem;
+    font-family:'Dancing Script',cursive;
+    color:#ff9eb3;
+}
+
+#lock-screen h2{
+    font-size:3rem;
+}
+
+#pinInput{
+    width:170px;
+    padding:14px;
+    margin:20px 0;
+    text-align:center;
+    font-size:1.4rem;
+    border:none;
+    outline:none;
+    border-radius:15px;
+    background:rgba(255,255,255,.12);
+    color:white;
+    letter-spacing:8px;
+}
+
+#lock-screen button{
+    padding:14px 35px;
+    border:none;
+    border-radius:50px;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    color:white;
+}
+
+#wrongPin{
+    margin-top:18px;
+    color:#ffb3b3;
+    font-size:.95rem;
+}
+        
         @media (max-width: 480px) {
             .app-container { height: 92vh; width: 94%; border-radius: 30px; }
             .heading-cursive { font-size: 3.6rem; }
@@ -305,6 +358,24 @@
     <canvas id="sakura-canvas"></canvas>
     <canvas id="fireworks-canvas"></canvas>
     <div id="cursor-sparkles"></div>
+
+    <div id="lock-screen">
+    <h2>🔒</h2>
+    <h1>Enter Your Special Date</h1>
+
+    <input
+    type="password"
+    id="pinInput"
+    maxlength="4"
+    placeholder="••••"
+    oninput="checkPin()">
+
+    <button onclick="unlockSite()">
+        Unlock ✨
+    </button>
+
+    <p id="wrongPin"></p>
+    </div>
 
     <div class="app-container" id="main-app">
         
@@ -411,10 +482,86 @@ Pata hai aapko phele kabhi bhi kis ke liye mene ase birthday wish bhi nahi likha
 
     <script>
         // FOOLPROOF LOADING - Ye directly chal jayega script run hote hi
-        setTimeout(function() {
-            goToPage(1);
-        }, 2000);
+      function checkPin() {
+    const pin = document.getElementById("pinInput").value;
+          
+    createHeart();
 
+    if (pin.length === 4) {
+        setTimeout(() => {
+            unlockSite();
+        }, 180);
+    }
+      }
+        function createHeart() {
+    const input = document.getElementById("pinInput");
+    const rect = input.getBoundingClientRect();
+
+    const heart = document.createElement("div");
+    heart.innerHTML = "💖";
+
+    heart.style.position = "fixed";
+    heart.style.left = (rect.left + Math.random() * rect.width) + "px";
+    heart.style.top = rect.top + "px";
+    heart.style.fontSize = "18px";
+    heart.style.pointerEvents = "none";
+    heart.style.zIndex = "99999";
+    heart.style.transition = "all 0.8s ease";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.style.transform = "translateY(-40px) scale(1.4)";
+        heart.style.opacity = "0";
+    }, 20);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 800);
+        }
+        
+        setTimeout(function() {
+    document.getElementById("main-app").style.display = "none";
+}, 0);
+        
+const correctPin = "0907";   // <-- Isko birthday date se replace kar dena
+
+function unlockSite() {
+    const entered = document.getElementById("pinInput").value;
+
+    if (entered === correctPin) {
+
+        if (navigator.vibrate) {
+            navigator.vibrate([120, 60, 120]);
+        }
+
+        document.getElementById("lock-screen").style.display = "none";
+        document.getElementById("main-app").style.display = "flex";
+
+        document.body.animate(
+[
+    { filter: "brightness(1)" },
+    { filter: "brightness(2.5)" },
+    { filter: "brightness(1)" }
+],
+{
+    duration: 450
+});
+        
+goToPage(1);
+
+    } else {
+
+        document.getElementById("wrongPin").innerText = "Wrong Date 🥺";
+
+        if (navigator.vibrate) {
+            navigator.vibrate(250);
+        }
+
+        document.getElementById("pinInput").value = "";
+    }
+}
+        
         function goToPage(pageNum) {
             if(pageNum !== 0) {
                 document.getElementById('loading-screen').style.display = 'none';
