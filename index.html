@@ -125,7 +125,7 @@
         }
 
         .page.active {
-            opacity: 1;
+            opacity: 20;
             pointer-events: all;
             transform: scale(1) translateY(0);
             z-index: 20;
@@ -392,11 +392,6 @@ background:#fff;
 animation:twinkle ease-in-out infinite;
 }
 
-        box-shadow:
-0 0 2px rgba(255,255,255,.35);
-
-opacity:.75;
-
 @keyframes twinkle{
 
 0%{
@@ -426,8 +421,8 @@ transform:scale(.8);
         inset -8px -8px 18px rgba(255,255,255,.05),
         inset 8px 8px 18px rgba(255,255,255,.18),
         0 0 12px rgba(255,255,255,.12);
-    backdrop-filter:blur(2px);
-    -webkit-backdrop-filter:blur(2px);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
     animation:bubbleUp linear forwards;
     background:radial-gradient(circle at 30% 30%,
 rgba(255,255,255,.65),
