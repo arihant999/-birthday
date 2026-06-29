@@ -369,28 +369,30 @@ animation:moonFloat 6s ease-in-out infinite;
 }
 
 .star{
-    position:absolute;
-    width:3px;
-    height:3px;
-    border-radius:50%;
-    background:white;
-    box-shadow:
-        0 0 4px #fff,
-        0 0 8px #fff,
-        0 0 15px rgba(255,255,255,.8);
-    animation:twinkle 2s ease-in-out infinite;
+position:absolute;
+border-radius:50%;
+background:#fff;
+
+animation:twinkle ease-in-out infinite;
 }
 
 @keyframes twinkle{
-    0%,100%{
-        opacity:.2;
-        transform:scale(.7);
-    }
 
-    50%{
-        opacity:1;
-        transform:scale(1.8);
-    }
+0%{
+opacity:.15;
+transform:scale(.7);
+}
+
+50%{
+opacity:1;
+transform:scale(1.8);
+}
+
+100%{
+opacity:.2;
+transform:scale(.8);
+}
+
 }
 
 .bubble{
@@ -893,14 +895,35 @@ setTimeout(() => {
             }
             animateNight();
         }
-        // ⭐ Stars
-for(let i=0;i<80;i++){
-let s=document.createElement("div");
-s.className="star";
-s.style.left=Math.random()*100+"vw";
-s.style.top=Math.random()*100+"vh";
-s.style.animationDelay=Math.random()*2+"s";
-document.getElementById("stars").appendChild(s);
+        // ⭐ Premium Stars Engine
+
+for(let i=0;i<140;i++){
+
+    const star=document.createElement("div");
+
+    star.className="star";
+
+    const size=Math.random()*3+1;
+
+    star.style.width=size+"px";
+    star.style.height=size+"px";
+
+    star.style.left=Math.random()*100+"vw";
+    star.style.top=Math.random()*100+"vh";
+
+    star.style.opacity=0.3+Math.random()*0.7;
+
+    star.style.animationDuration=
+        (2+Math.random()*4)+"s";
+
+    star.style.animationDelay=
+        Math.random()*5+"s";
+
+    star.style.boxShadow=
+    `0 0 ${6+size*4}px white`;
+
+    document.getElementById("stars").appendChild(star);
+
 }
 
 // 🫧 Bubbles
