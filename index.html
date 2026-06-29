@@ -537,6 +537,11 @@ function unlockSite() {
 
         document.getElementById("lock-screen").style.display = "none";
         document.getElementById("main-app").style.display = "flex";
+        document.getElementById("loading-screen").classList.add("active");
+
+setTimeout(() => {
+    goToPage(1);
+}, 5000);
 
         document.body.animate(
 [
