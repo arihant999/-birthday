@@ -404,6 +404,37 @@ transform:translateY(-120vh);
 opacity:0;
 }
 }
+    .shooting-star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    box-shadow:0 0 8px white,0 0 18px white;
+}
+
+.shooting-star::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120px;
+    width:120px;
+    height:2px;
+    background:linear-gradient(to left,
+        rgba(255,255,255,0),
+        rgba(255,255,255,.9));
+}
+
+@keyframes shoot{
+    from{
+        transform:translate(0,0);
+        opacity:1;
+    }
+    to{
+        transform:translate(-350px,350px);
+        opacity:0;
+    }
+}
         
         @media (max-width: 480px) {
             .app-container { height: 92vh; width: 94%; border-radius: 30px; }
@@ -855,6 +886,25 @@ document.getElementById("bubbles").appendChild(b);
 setTimeout(()=>b.remove(),11000);
 
 },600);
+
+        // ☄️ Shooting Stars
+setInterval(() => {
+
+    const star = document.createElement("div");
+    star.className = "shooting-star";
+
+    star.style.left = Math.random() * window.innerWidth + "px";
+    star.style.top = Math.random() * 250 + "px";
+
+    star.style.animation = "shoot 1.6s linear forwards";
+
+    document.getElementById("lock-effects").appendChild(star);
+
+    setTimeout(() => {
+        star.remove();
+    }, 1700);
+
+}, 3500);
     </script>
 </body>
 </html>
